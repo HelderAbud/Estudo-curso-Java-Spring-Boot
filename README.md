@@ -32,17 +32,17 @@ Ainda não implementado (está em `requisitos.txt`): papéis Gerente/Operador, a
 
 Postgres (Docker, se disponível):
 
-``text
+``
 docker run --name librarydb -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=library -p 5432:5432 -d postgres:16.3
 ``
 
 API:
 
-``text
+``
 ./mvnw spring-boot:run
 ``
 
-Smoke:
+Smoke test:
 
 ``http
 POST http://localhost:8080/autores
@@ -63,7 +63,7 @@ Mais comandos: `comandos-docker.txt`, `comandos-sql.txt`, `comandos-sql-seed.txt
 
 No Cursor, depois da aula no IntelliJ:
 
-``text
+``
 Atualizar estudo
 ``
 
