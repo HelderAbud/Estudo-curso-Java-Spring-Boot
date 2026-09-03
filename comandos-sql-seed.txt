@@ -1,0 +1,98 @@
+-- Seed de dados para os testes do libraryapi (aula 58 / JPA + API Autor)
+-- Banco: library | Schema: public
+-- Conexão: jdbc:postgresql://localhost:5432/library (user: postgres)
+
+-- ============================================================
+-- OPCIONAL: limpar dados antes de inserir (descomente se precisar)
+-- ============================================================
+-- DELETE FROM livro;
+-- DELETE FROM public.autor;
+
+-- ============================================================
+-- AUTORES (UUIDs fixos usados nos testes)
+-- ============================================================
+
+-- AutorRepositoryTest.atualizarTest / deletePorIdTest
+INSERT INTO public.autor (id, nome, data_nascimento, nacionalidade)
+VALUES ('2449f4e4-ee1a-4a71-8aa3-e9d46306fe8a', 'José', '1951-01-31', 'Brasileira')
+ON CONFLICT (id) DO NOTHING;
+
+-- AutorRepositoryTest.deleteTest (Maria)
+INSERT INTO public.autor (id, nome, data_nascimento, nacionalidade)
+VALUES ('abc082bf-1d23-4767-b3d9-9f322856ca6a', 'Maria', '1951-01-31', 'Brasileira')
+ON CONFLICT (id) DO NOTHING;
+
+-- LivroRepositoryTest / AutorController (exemplo no comentário)
+INSERT INTO public.autor (id, nome, data_nascimento, nacionalidade)
+VALUES ('76e7c418-ccf9-4e2a-af20-c28b9e50ab55', 'Maria', '1951-01-31', 'Brasileira')
+ON CONFLICT (id) DO NOTHING;
+
+-- AutorRepositoryTest.listarLivrosAutor / salvarAutorComLivrosTest
+INSERT INTO public.autor (id, nome, data_nascimento, nacionalidade)
+VALUES ('27c51581-8dfb-4b78-8c52-3965f6496f01', 'Antonio', '1970-08-05', 'Americana')
+ON CONFLICT (id) DO NOTHING;
+
+-- ============================================================
+-- LIVROS (UUIDs fixos usados nos testes)
+-- ============================================================
+
+-- LivroRepositoryTest.atualizarAutorDoLivro / deletar
+INSERT INTO livro (id, isbn, titulo, data_publicacao, genero, preco, id_autor)
+VALUES (
+    'cfbc87ce-5932-4792-bff0-78ef5973861b',
+    '90887-84874',
+    'Outro Livro',
+    '1980-01-02',
+    'FICCAO',
+    100.00,
+    '76e7c418-ccf9-4e2a-af20-c28b9e50ab55'
+)
+ON CONFLICT (id) DO NOTHING;
+
+-- LivroRepositoryTest.deletarCascade (salvarAutorELivroTest)
+INSERT INTO livro (id, isbn, titulo, data_publicacao, genero, preco, id_autor)
+VALUES (
+    '22238c02-8118-45ba-a9f0-202dfc3acc67',
+    '90887-84874',
+    'Terceiro Livro',
+    '1980-01-02',
+    'FICCAO',
+    100.00,
+    '2449f4e4-ee1a-4a71-8aa3-e9d46306fe8a'
+)
+ON CONFLICT (id) DO NOTHING;
+
+-- LivroRepositoryTest.buscarLivroTest / TransacaoService.atualizacaoSemAtualizar
+INSERT INTO livro (id, isbn, titulo, data_publicacao, genero, preco, id_autor)
+VALUES (
+    'daed83b3-65fd-49eb-9400-cbc0af13059d',
+    '20847-84874',
+    'O roubo da casa assombrada',
+    '1999-01-02',
+    'MISTERIO',
+    204.00,
+    '27c51581-8dfb-4b78-8c52-3965f6496f01'
+)
+ON CONFLICT (id) DO NOTHING;
+
+-- Livro extra do Antonio (pesquisas por título / ISBN / preço)
+INSERT INTO livro (id, isbn, titulo, data_publicacao, genero, preco, id_autor)
+VALUES (
+    gen_random_uuid(),
+    '99999-84874',
+    'O roubo da casa assombrada',
+    '2000-01-02',
+    'MISTERIO',
+    650.00,
+    '27c51581-8dfb-4b78-8c52-3965f6496f01'
+);
+
+-- ============================================================
+-- VERIFICAÇÃO (deve retornar 3 linhas)
+-- ============================================================
+-- SELECT id, nome FROM public.autor
+-- WHERE id IN (
+--     'abc082bf-1d23-4767-b3d9-9f322856ca6a',
+--     '76e7c418-ccf9-4e2a-af20-c28b9e50ab55',
+--     'cfbc87ce-5932-4792-bff0-78ef5973861b'
+-- );
