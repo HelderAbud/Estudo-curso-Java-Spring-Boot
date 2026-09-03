@@ -6,6 +6,19 @@ Caderno público do progresso no curso. O código daqui é a **libraryapi** (mó
 
 Repositório: [HelderAbud/Estudo-curso-Java-Spring-Boot](https://github.com/HelderAbud/Estudo-curso-Java-Spring-Boot)
 
+## Sobre o curso
+
+Caderno de estudo do curso **Spring Boot Expert: JPA, REST, JWT, OAuth2 com Docker e AWS**.
+
+Temas que vou percorrendo neste repo:
+
+- Spring Boot e arquitetura do ecossistema Spring
+- JPA / Spring Data
+- APIs REST
+- Spring Security (JWT, OAuth2, login social)
+- Docker e deploy na AWS (RDS)
+- Testes (JUnit/Mockito) e documentação (Swagger/OpenAPI)
+
 ## Status atual
 
 | Campo | Valor |
