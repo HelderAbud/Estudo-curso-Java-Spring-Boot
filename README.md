@@ -24,7 +24,7 @@ Temas que vou percorrendo neste repo:
 | Campo | Valor |
 |-------|--------|
 | Módulo | `libraryapi` |
-| Aula | **58** — API REST de Autor |
+| Aula | **85** — Pesquisa de Autores |
 | Java | 21 |
 | Spring Boot | 3.3.2 |
 | Banco | PostgreSQL 16 (`localhost:5432/library`) |
@@ -37,9 +37,13 @@ Diário das aulas: [`DIARIO.md`](DIARIO.md)
 - Pool Hikari em `DatabaseConfiguration`
 - `POST /autores` — cadastra autor e devolve `201` com header `Location`
 - `GET /autores/{id}` — consulta por UUID (`200` ou `404`)
-- DTO `AutorDTO` (record) com `mapearParaAutor()`
+- `GET /autores` — pesquisa opcional por `nome` e/ou `nacionalidade`
+- `PUT /autores/{id}` — atualiza (`204` ou `404`)
+- `DELETE /autores/{id}` — remove (`204` ou `404`); bloqueia se o autor tiver livro
+- DTO `AutorDTO` (record) com Bean Validation e `mapearParaAutor()`
+- `GlobalExceptionHandler`: validação `400`, duplicado `409`, operação não permitida `400`
 
-Ainda não implementado (está em `requisitos.txt`): papéis Gerente/Operador, autor duplicado, exclusão com regra de livros.
+Ainda não implementado (está em `requisitos.txt`): papéis Gerente/Operador.
 
 ## Como rodar
 
@@ -68,6 +72,8 @@ Content-Type: application/json
 }
 
 GET http://localhost:8080/autores/{id}
+
+GET http://localhost:8080/autores?nome=Machado de Assis
 ``
 
 Mais comandos: `comandos-docker.txt`, `comandos-sql.txt`, `comandos-sql-seed.txt`.
