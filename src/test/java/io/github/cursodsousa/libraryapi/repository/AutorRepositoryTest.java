@@ -113,8 +113,7 @@ public class AutorRepositoryTest {
         autor.getLivros().add(livro2);
 
         repository.save(autor);
-
-//        livroRepository.saveAll(autor.getLivros());
+        livroRepository.saveAll(autor.getLivros());
     }
 
     @Test

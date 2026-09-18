@@ -3,9 +3,9 @@ package io.github.cursodsousa.libraryapi.service;
 import io.github.cursodsousa.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import io.github.cursodsousa.libraryapi.exceptions.RegistroDuplicadoException;
 import io.github.cursodsousa.libraryapi.model.Autor;
-import io.github.cursodsousa.libraryapi.model.Livro;
 import io.github.cursodsousa.libraryapi.repository.AutorRepository;
 import io.github.cursodsousa.libraryapi.repository.LivroRepository;
+import io.github.cursodsousa.libraryapi.validator.AutorValidator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,7 +35,7 @@ class AutorServiceTest {
 
     @BeforeEach
     void setUp() {
-        service = new AutorService(repository, livroRepository);
+        service = new AutorService(repository, new AutorValidator(repository), livroRepository);
     }
 
     @Test
@@ -54,10 +53,23 @@ class AutorServiceTest {
     void deveRecusarExclusaoQuandoAutorPossuiLivro() {
         Autor autor = autorSemId();
         autor.setId(UUID.fromString("2449f4e4-ee1a-4a71-8aa3-e9d46306fe8a"));
-        autor.setLivros(List.of(new Livro()));
+        when(livroRepository.existsByAutor(autor)).thenReturn(true);
 
         assertThrows(OperacaoNaoPermitidaException.class, () -> service.deletar(autor));
         verify(repository, never()).delete(any());
+    }
+
+    @Test
+    void devePermitirAtualizarQuandoNaoHaOutroAutorDuplicado() {
+        Autor autor = autorSemId();
+        autor.setId(UUID.fromString("2449f4e4-ee1a-4a71-8aa3-e9d46306fe8a"));
+        when(repository.findByNomeAndDataNascimentoAndNacionalidade(
+                "José", LocalDate.of(1951, 1, 31), "Brasileira"))
+                .thenReturn(Optional.empty());
+
+        service.atualizar(autor);
+
+        verify(repository).save(autor);
     }
 
     private Autor autorSemId() {

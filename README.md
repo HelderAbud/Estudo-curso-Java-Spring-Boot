@@ -24,7 +24,7 @@ Temas que vou percorrendo neste repo:
 | Campo | Valor |
 |-------|--------|
 | Módulo | `libraryapi` |
-| Aula | **85** — Pesquisa de Autores |
+| Aula | **91** — GlobalExceptionHandler |
 | Java | 21 |
 | Spring Boot | 3.3.2 |
 | Banco | PostgreSQL 16 (`localhost:5432/library`) |
@@ -39,9 +39,11 @@ Diário das aulas: [`DIARIO.md`](DIARIO.md)
 - `GET /autores/{id}` — consulta por UUID (`200` ou `404`)
 - `GET /autores` — pesquisa opcional por `nome` e/ou `nacionalidade`
 - `PUT /autores/{id}` — atualiza (`204` ou `404`)
-- `DELETE /autores/{id}` — remove (`204` ou `404`); bloqueia se o autor tiver livro
+- `DELETE /autores/{id}` — remove (`204` ou `404`); bloqueia se o autor tiver livro (`400`)
 - DTO `AutorDTO` (record) com Bean Validation e `mapearParaAutor()`
-- `GlobalExceptionHandler`: validação `400`, duplicado `409`, operação não permitida `400`
+- `AutorValidator` — duplicidade (mesmo nome + data + nacionalidade) → `409`
+- `GlobalExceptionHandler` — validação `400`, duplicado `409`, operação não permitida `400`
+- Sem `CascadeType.ALL` em `Autor.livros` (não apaga livros junto com o autor)
 
 Ainda não implementado (está em `requisitos.txt`): papéis Gerente/Operador.
 
