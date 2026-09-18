@@ -2,6 +2,16 @@
 
 Registro curto do que entrou no repositório a cada dia. Notas da aula ficam em `notas/`.
 
+## 2026-09-17 — Aula 91
+
+- Tira `try/catch` do `AutorController`; exceptions sobem para o `GlobalExceptionHandler`.
+- `AutorValidator` valida duplicidade; `salvar`/`atualizar` chamam `validator.validar`.
+- `possuiLivro` usa `livroRepository.existsByAutor`.
+- Remove `CascadeType.ALL` de `Autor.livros` para a exclusão não apagar livros em cascata.
+- `@RequiredArgsConstructor` no `AutorService`.
+
+Notas: [`notas/aula-91-global-exception-handler.md`](notas/aula-91-global-exception-handler.md)
+
 ## 2026-09-11 — Aula 85
 
 - `GET /autores` com filtros opcionais `nome` e `nacionalidade`.
