@@ -12,10 +12,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import org.springframework.data.domain.Example;
+
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
@@ -57,6 +61,17 @@ class AutorServiceTest {
 
         assertThrows(OperacaoNaoPermitidaException.class, () -> service.deletar(autor));
         verify(repository, never()).delete(any());
+    }
+
+    @Test
+    void devePesquisarPorExampleComNomeENacionalidadeParciais() {
+        Autor autor = autorSemId();
+        when(repository.findAll(any(Example.class))).thenReturn(List.of(autor));
+
+        List<Autor> resultado = service.pesquisaByExample("mar", "ame");
+
+        assertEquals(1, resultado.size());
+        verify(repository).findAll(any(Example.class));
     }
 
     @Test

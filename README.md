@@ -24,7 +24,7 @@ Temas que vou percorrendo neste repo:
 | Campo | Valor |
 |-------|--------|
 | Módulo | `libraryapi` |
-| Aula | **91** — GlobalExceptionHandler |
+| Aula | **103** — GenericController e API de livros |
 | Java | 21 |
 | Spring Boot | 3.3.2 |
 | Banco | PostgreSQL 16 (`localhost:5432/library`) |
@@ -42,7 +42,13 @@ Diário das aulas: [`DIARIO.md`](DIARIO.md)
 - `DELETE /autores/{id}` — remove (`204` ou `404`); bloqueia se o autor tiver livro (`400`)
 - DTO `AutorDTO` (record) com Bean Validation e `mapearParaAutor()`
 - `AutorValidator` — duplicidade (mesmo nome + data + nacionalidade) → `409`
-- `GlobalExceptionHandler` — validação `400`, duplicado `409`, operação não permitida `400`
+- `GenericController` — header `Location` dos POSTs (`/autores` e `/livros`)
+- `POST /livros` — cadastra livro (`201` + `Location`); autor inexistente → `404`
+- `GET /livros/{id}` — detalhe (`200` ou `404`)
+- `GET /livros` — pesquisa paginada (`isbn`, `titulo`, `nome-autor`, `genero`, `ano-publicacao`)
+- `PUT /livros/{id}` e `DELETE /livros/{id}` — atualiza/remove (`204` ou `404`)
+- MapStruct `LivroMapper`; `LivroValidator` (ISBN único, data futura, preço a partir de 2020)
+- `GlobalExceptionHandler` — validação `400`, duplicado `409`, operação não permitida `400`, campo inválido `422`
 - Sem `CascadeType.ALL` em `Autor.livros` (não apaga livros junto com o autor)
 
 Ainda não implementado (está em `requisitos.txt`): papéis Gerente/Operador.
@@ -76,6 +82,20 @@ Content-Type: application/json
 GET http://localhost:8080/autores/{id}
 
 GET http://localhost:8080/autores?nome=Machado de Assis
+
+POST http://localhost:8080/livros
+Content-Type: application/json
+
+{
+  "isbn": "978-0-00",
+  "titulo": "O Senhor dos Anéis",
+  "dataPublicacao": "1954-07-29",
+  "genero": "FANTASIA",
+  "preco": 99.90,
+  "idAutor": "{id}"
+}
+
+GET http://localhost:8080/livros?nome-autor=Tolkien&genero=FANTASIA
 ``
 
 Mais comandos: `comandos-docker.txt`, `comandos-sql.txt`, `comandos-sql-seed.txt`.
