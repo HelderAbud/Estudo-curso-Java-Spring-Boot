@@ -2,6 +2,16 @@
 
 Registro curto do que entrou no repositório a cada dia. Notas da aula ficam em `notas/`.
 
+## 2026-10-06 — Aula 103
+
+- `GenericController.gerarHeaderLocation` centraliza o header `Location` dos POSTs.
+- `AutorController` e `LivroController` implementam a interface.
+- CRUD de Livro: `POST/GET/PUT/DELETE /livros` + pesquisa paginada com `LivroSpecs`.
+- MapStruct (`LivroMapper`), `LivroValidator` e `CampoInvalidoException` → `422` no `GlobalExceptionHandler`.
+- Pesquisa de autores passa a `Example` (`pesquisaByExample`).
+
+Notas: [`notas/aula-103-generic-controller-livros.md`](notas/aula-103-generic-controller-livros.md)
+
 ## 2026-09-17 — Aula 91
 
 - Tira `try/catch` do `AutorController`; exceptions sobem para o `GlobalExceptionHandler`.

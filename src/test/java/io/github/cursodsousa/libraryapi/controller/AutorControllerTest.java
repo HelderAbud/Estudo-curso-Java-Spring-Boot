@@ -84,11 +84,23 @@ class AutorControllerTest {
     @Test
     void devePesquisarAutoresPorNome() throws Exception {
         UUID id = UUID.fromString("2449f4e4-ee1a-4a71-8aa3-e9d46306fe8a");
-        when(service.pesquisa("José", null)).thenReturn(List.of(autor(id)));
+        when(service.pesquisaByExample("José", null)).thenReturn(List.of(autor(id)));
 
         mockMvc.perform(get("/autores").param("nome", "José"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].nome").value("José"));
+    }
+
+    @Test
+    void devePesquisarAutoresPorNomeENacionalidadeParciais() throws Exception {
+        UUID id = UUID.fromString("2449f4e4-ee1a-4a71-8aa3-e9d46306fe8a");
+        when(service.pesquisaByExample("Maria", "ame")).thenReturn(List.of(autor(id)));
+
+        mockMvc.perform(get("/autores")
+                        .param("nome", "Maria")
+                        .param("nacionalidade", "ame"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].nacionalidade").value("Brasileira"));
     }
 
     @Test
