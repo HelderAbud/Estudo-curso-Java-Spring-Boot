@@ -13,6 +13,7 @@ import io.github.cursodsousa.libraryapi.service.LivroService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,6 +36,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
@@ -44,6 +46,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -77,6 +80,21 @@ class LivroControllerTest {
     }
 
     @Test
+    void deveListarLivrosSemFiltroComPaginacaoDefault() throws Exception {
+        ArgumentCaptor<Pageable> pageCaptor = ArgumentCaptor.forClass(Pageable.class);
+        when(service.pesquisa(isNull(), isNull(), isNull(), isNull(), isNull(), pageCaptor.capture()))
+                .thenReturn(new PageImpl<>(List.of(livro()), PageRequest.of(0, 10), 1));
+
+        mockMvc.perform(get("/livros"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content[0].titulo").value("O Senhor dos Anéis"));
+
+        assertEquals(10, pageCaptor.getValue().getPageSize());
+        assertEquals(0, pageCaptor.getValue().getPageNumber());
+    }
+
+    @Test
     void devePesquisarLivrosPaginadoComFiltrosOpcionais() throws Exception {
         when(service.pesquisa(
                 isNull(), isNull(), eq("Tolkien"), eq(GeneroLivro.FANTASIA), isNull(), any(Pageable.class)))
@@ -88,9 +106,32 @@ class LivroControllerTest {
                         .param("page", "0")
                         .param("size", "10"))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content").isArray())
+                .andExpect(jsonPath("$.content[0].id").value("11111111-1111-1111-1111-111111111111"))
+                .andExpect(jsonPath("$.content[0].isbn").value("978-0-00"))
                 .andExpect(jsonPath("$.content[0].titulo").value("O Senhor dos Anéis"))
+                .andExpect(jsonPath("$.content[0].dataPublicacao").value("1954-07-29"))
                 .andExpect(jsonPath("$.content[0].genero").value("FANTASIA"))
-                .andExpect(jsonPath("$.content[0].autor.nome").value("J.R.R. Tolkien"));
+                .andExpect(jsonPath("$.content[0].preco").value(99.90))
+                .andExpect(jsonPath("$.content[0].autor.nome").value("J.R.R. Tolkien"))
+                .andExpect(jsonPath("$.content[0].autor.dataNascimento").value("1892-01-03"))
+                .andExpect(jsonPath("$.content[0].autor.nacionalidade").value("Britânica"));
+    }
+
+    @Test
+    void deveEncaminharIsbnTituloEAnoPublicacaoNaPesquisa() throws Exception {
+        when(service.pesquisa(
+                eq("978-0-00"), eq("Senhor"), eq("Tolkien"), eq(GeneroLivro.FANTASIA), eq(1954), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(List.of(livro()), PageRequest.of(0, 10), 1));
+
+        mockMvc.perform(get("/livros")
+                        .param("isbn", "978-0-00")
+                        .param("titulo", "Senhor")
+                        .param("nome-autor", "Tolkien")
+                        .param("genero", "FANTASIA")
+                        .param("ano-publicacao", "1954"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content[0].isbn").value("978-0-00"));
     }
 
     @Test
@@ -175,7 +216,15 @@ class LivroControllerTest {
 
         mockMvc.perform(get("/livros/{id}", id))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.titulo").value("O Senhor dos Anéis"));
+                .andExpect(jsonPath("$.id").value(id.toString()))
+                .andExpect(jsonPath("$.isbn").value("978-0-00"))
+                .andExpect(jsonPath("$.titulo").value("O Senhor dos Anéis"))
+                .andExpect(jsonPath("$.dataPublicacao").value("1954-07-29"))
+                .andExpect(jsonPath("$.genero").value("FANTASIA"))
+                .andExpect(jsonPath("$.preco").value(99.90))
+                .andExpect(jsonPath("$.autor.nome").value("J.R.R. Tolkien"))
+                .andExpect(jsonPath("$.autor.dataNascimento").value("1892-01-03"))
+                .andExpect(jsonPath("$.autor.nacionalidade").value("Britânica"));
     }
 
     @Test
@@ -206,7 +255,17 @@ class LivroControllerTest {
         when(service.obterPorId(id)).thenReturn(Optional.of(livro()));
 
         mockMvc.perform(delete("/livros/{id}", id))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isNoContent())
+                .andExpect(content().string(""));
+    }
+
+    @Test
+    void deveRetornar404QuandoExcluirIdInexistente() throws Exception {
+        UUID id = UUID.fromString("00000000-0000-0000-0000-000000000001");
+        when(service.obterPorId(id)).thenReturn(Optional.empty());
+
+        mockMvc.perform(delete("/livros/{id}", id))
+                .andExpect(status().isNotFound());
     }
 
     private CadastroLivroDTO dto(UUID idAutor) {

@@ -3,7 +3,6 @@ package io.github.cursodsousa.libraryapi.service;
 import io.github.cursodsousa.libraryapi.model.GeneroLivro;
 import io.github.cursodsousa.libraryapi.model.Livro;
 import io.github.cursodsousa.libraryapi.repository.LivroRepository;
-import io.github.cursodsousa.libraryapi.repository.specs.LivroSpecs;
 import io.github.cursodsousa.libraryapi.validator.LivroValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,6 +13,12 @@ import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 import java.util.UUID;
+
+import static io.github.cursodsousa.libraryapi.repository.specs.LivroSpecs.anoPublicacaoEqual;
+import static io.github.cursodsousa.libraryapi.repository.specs.LivroSpecs.generoEqual;
+import static io.github.cursodsousa.libraryapi.repository.specs.LivroSpecs.isbnEqual;
+import static io.github.cursodsousa.libraryapi.repository.specs.LivroSpecs.nomeAutorLike;
+import static io.github.cursodsousa.libraryapi.repository.specs.LivroSpecs.tituloLike;
 
 @Service
 @RequiredArgsConstructor
@@ -51,19 +56,19 @@ public class LivroService {
         Specification<Livro> specs = Specification.where((root, query, cb) -> cb.conjunction());
 
         if (StringUtils.hasText(isbn)) {
-            specs = specs.and(LivroSpecs.isbnEqual(isbn));
+            specs = specs.and(isbnEqual(isbn));
         }
         if (StringUtils.hasText(titulo)) {
-            specs = specs.and(LivroSpecs.tituloLike(titulo));
+            specs = specs.and(tituloLike(titulo));
         }
         if (genero != null) {
-            specs = specs.and(LivroSpecs.generoEqual(genero));
+            specs = specs.and(generoEqual(genero));
         }
         if (StringUtils.hasText(nomeAutor)) {
-            specs = specs.and(LivroSpecs.nomeAutorLike(nomeAutor));
+            specs = specs.and(nomeAutorLike(nomeAutor));
         }
         if (anoPublicacao != null) {
-            specs = specs.and(LivroSpecs.anoPublicacaoEqual(anoPublicacao));
+            specs = specs.and(anoPublicacaoEqual(anoPublicacao));
         }
 
         return repository.findAll(specs, pageRequest);

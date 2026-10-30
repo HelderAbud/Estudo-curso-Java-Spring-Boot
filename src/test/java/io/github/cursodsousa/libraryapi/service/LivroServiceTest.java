@@ -116,6 +116,20 @@ class LivroServiceTest {
         verify(repository).findAll(any(Specification.class), eq(page));
     }
 
+    @Test
+    void devePesquisarComTodosOsFiltrosOpcionais() {
+        Livro livro = livroFantasia();
+        Pageable page = PageRequest.of(0, 10);
+        when(repository.findAll(any(Specification.class), eq(page)))
+                .thenReturn(new PageImpl<>(List.of(livro), page, 1));
+
+        Page<Livro> resultado = service.pesquisa(
+                "978-0-00", "Senhor", "Tolkien", GeneroLivro.FANTASIA, 1954, page);
+
+        assertEquals(1, resultado.getContent().size());
+        verify(repository).findAll(any(Specification.class), eq(page));
+    }
+
     private Livro livroFantasia() {
         Autor autor = new Autor();
         autor.setNome("J.R.R. Tolkien");
