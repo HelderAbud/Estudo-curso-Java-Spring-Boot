@@ -1,8 +1,6 @@
 # Estudo — Curso Java Spring Boot Especialista
 
-Caderno público do progresso no curso. O código daqui é a **libraryapi** (módulo atual), sincronizado a partir do IntelliJ:
-
-`C:\Users\Pessoal\IdeaProjects\curso-spring-boot-especialista\libraryapi`
+Caderno público do progresso no curso. O código daqui é a **libraryapi** (módulo atual), sincronizado a partir do clone local do curso no IntelliJ.
 
 Repositório: [HelderAbud/Estudo-curso-Java-Spring-Boot](https://github.com/HelderAbud/Estudo-curso-Java-Spring-Boot)
 
@@ -34,13 +32,13 @@ Diário das aulas: [`DIARIO.md`](DIARIO.md)
 ## O que já existe na API
 
 - Entidades JPA `Autor` e `Livro`, auditoria (`@CreatedDate`, `@LastModifiedDate`)
-- Pool Hikari em `DatabaseConfiguration`
-- `POST /autores` — cadastra autor e devolve `201` com header `Location`
+- Pool Hikari em `DatabaseConfiguration` (didático; o Boot já configura via `spring.datasource.hikari.*`)
+- `POST /autores` — cadastra autor e devolve `201` com header `Location`. O `id` do body é ignorado; o UUID sai no `Location` e no GET
 - `GET /autores/{id}` — consulta por UUID (`200` ou `404`)
 - `GET /autores` — pesquisa opcional por `nome` e/ou `nacionalidade`
 - `PUT /autores/{id}` — atualiza (`204` ou `404`)
 - `DELETE /autores/{id}` — remove (`204` ou `404`); bloqueia se o autor tiver livro (`400`)
-- DTO `AutorDTO` (record) com Bean Validation e `mapearParaAutor()`
+- DTO `AutorDTO` (record) com Bean Validation e `mapearParaAutor()`; campo `id` é só de saída
 - `AutorValidator` — duplicidade (mesmo nome + data + nacionalidade) → `409`
 - `GenericController` — header `Location` dos POSTs (`/autores` e `/livros`)
 - `POST /livros` — cadastra livro (`201` + `Location`); autor inexistente → `404`
@@ -57,19 +55,19 @@ Ainda não implementado (está em `requisitos.txt`): papéis Gerente/Operador.
 
 Postgres (Docker, se disponível):
 
-``
+```
 docker run --name librarydb -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=library -p 5432:5432 -d postgres:16.3
-``
+```
 
 API:
 
-``
+```
 ./mvnw spring-boot:run
-``
+```
 
 Smoke test:
 
-``http
+```http
 POST http://localhost:8080/autores
 Content-Type: application/json
 
@@ -96,7 +94,7 @@ Content-Type: application/json
 }
 
 GET http://localhost:8080/livros?nome-autor=Tolkien&genero=FANTASIA
-``
+```
 
 Mais comandos: `comandos-docker.txt`, `comandos-sql.txt`, `comandos-sql-seed.txt`.
 
@@ -104,8 +102,8 @@ Mais comandos: `comandos-docker.txt`, `comandos-sql.txt`, `comandos-sql-seed.txt
 
 No Cursor, depois da aula no IntelliJ:
 
-``
+```
 Atualizar estudo
-``
+```
 
 O agente compara a `libraryapi` local com este repositório, atualiza o diário e abre PR. Detalhe operacional: [`AGENTS.md`](AGENTS.md).

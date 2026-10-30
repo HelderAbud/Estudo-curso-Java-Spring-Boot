@@ -2,6 +2,13 @@
 
 Registro curto do que entrou no repositório a cada dia. Notas da aula ficam em `notas/`.
 
+## 2026-10-29 — Review de portfólio
+
+- README: fences de código (três backticks) e caminho da máquina removido.
+- `id` do `AutorDTO` documentado como campo só de saída (POST ignora).
+- `@Transactional` em `salvar`/`atualizar` de Autor e Livro.
+- Hábito: depois de cada aula, refazer um trecho sem consulta (ex.: GET por id).
+
 ## 2026-10-29 — Cobertura da pesquisa de livros
 
 - `LivroService.pesquisa` usa static import dos `LivroSpecs`.

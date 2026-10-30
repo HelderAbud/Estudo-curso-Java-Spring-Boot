@@ -9,6 +9,9 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.UUID;
 
+/**
+ * @param id gerado pelo servidor; ignorado no POST (campo só de saída)
+ */
 public record AutorDTO(
         UUID id,
         @NotBlank(message = "campo obrigatório")
