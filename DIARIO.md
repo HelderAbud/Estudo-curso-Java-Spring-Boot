@@ -2,6 +2,12 @@
 
 Registro curto do que entrou no repositório a cada dia. Notas da aula ficam em `notas/`.
 
+## 2026-10-29 — Cobertura da pesquisa de livros
+
+- `LivroService.pesquisa` usa static import dos `LivroSpecs`.
+- Testes de controller: listagem sem filtro (page/size default), encaminhamento de `isbn`/`titulo`/`ano-publicacao`, corpo do GET e 404 no DELETE.
+- Teste de service com todos os filtros opcionais.
+
 ## 2026-10-06 — Aula 103
 
 - `GenericController.gerarHeaderLocation` centraliza o header `Location` dos POSTs.
