@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.Optional;
@@ -27,6 +28,7 @@ public class LivroService {
     private final LivroRepository repository;
     private final LivroValidator validator;
 
+    @Transactional
     public Livro salvar(Livro livro) {
         validator.validar(livro);
         return repository.save(livro);
@@ -36,6 +38,7 @@ public class LivroService {
         return repository.findById(id);
     }
 
+    @Transactional
     public void atualizar(Livro livro) {
         validator.validar(livro);
         repository.save(livro);

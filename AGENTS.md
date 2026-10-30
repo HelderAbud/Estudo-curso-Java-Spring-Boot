@@ -6,7 +6,7 @@ Caderno de estudo da **libraryapi**. Código-fonte de trabalho no IntelliJ; este
 
 Quando o usuário escrever **Atualizar estudo**, **Dia do curso** ou **Sincronizar libraryapi**:
 
-1. Fonte: `C:\Users\Pessoal\IdeaProjects\curso-spring-boot-especialista\libraryapi`
+1. Fonte: módulo `libraryapi` no clone local do curso (IntelliJ).
 2. Destino: este repositório (não alterar o `origin` do clone do curso).
 3. Copiar só a `libraryapi` (excluir `target/`, `.idea/`, `*.iml`).
 4. Atualizar `DIARIO.md` e `notas/aula-XX-*.md` com a aula do dia.

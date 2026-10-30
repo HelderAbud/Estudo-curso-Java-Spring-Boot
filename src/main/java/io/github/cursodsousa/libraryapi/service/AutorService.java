@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +24,7 @@ public class AutorService {
     private final AutorValidator validator;
     private final LivroRepository livroRepository;
 
+    @Transactional
     public Autor salvar(Autor autor) {
         validator.validar(autor);
         return repository.save(autor);
@@ -32,6 +34,7 @@ public class AutorService {
         return repository.findById(id);
     }
 
+    @Transactional
     public void atualizar(Autor autor) {
         validator.validar(autor);
         repository.save(autor);
